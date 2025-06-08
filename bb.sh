@@ -17,7 +17,7 @@ global_config=".config"
 # by the 'global_config' file contents
 global_variables() {
     global_software_name="BashBlog"
-    global_software_version="2.10"
+    global_software_version="2.10-maroph"
 
     # Blog title
     global_title="My fancy blog"
@@ -25,11 +25,12 @@ global_variables() {
     global_description="A blog about turtles and carrots"
     # The public base URL for this blog
     global_url="http://example.com/blog"
+    global_language="en"
 
     # Your name
     global_author="John Smith"
-    # You can use twitter or facebook or anything for global_author_url
-    global_author_url="http://twitter.com/example" 
+    # You can use X (twitter) or facebook or anything for global_author_url
+    global_author_url="http://x.com/example" 
     # Your email
     global_email="john@smith.com"
 
@@ -372,9 +373,9 @@ twitter() {
         if [[ $global_twitter_cookieless == true ]]; then 
             id=$RANDOM
 
-            search_engine="https://twitter.com/search?q="
+            search_engine="https://x.com/search?q="
 
-            echo "<p id='twitter'><a href='http://twitter.com/intent/tweet?url=$1&text=$template_twitter_comment&via=$global_twitter_username'>$template_comments $template_twitter_button</a> "
+            echo "<p id='twitter'><a href='http://x.com/intent/tweet?url=$1&text=$template_twitter_comment&via=$global_twitter_username'>$template_comments $template_twitter_button</a> "
             echo "<a href='$search_engine""$1'><span id='count-$id'></span></a>&nbsp;</p>"
             return;
         else 
@@ -384,9 +385,9 @@ twitter() {
         echo "<p id='twitter'><a href=\"$1#disqus_thread\">$template_comments</a> &nbsp;"
     fi  
 
-    echo "<a href=\"https://twitter.com/share\" class=\"twitter-share-button\" data-text=\"$template_twitter_comment\" data-url=\"$1\""
+    echo "<a href=\"https://x.com/share\" class=\"twitter-share-button\" data-text=\"$template_twitter_comment\" data-url=\"$1\""
     echo " data-via=\"$global_twitter_username\""
-    echo ">$template_twitter_button</a>	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=\"//platform.twitter.com/widgets.js\";fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");</script>"
+    echo ">$template_twitter_button</a>	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=\"//platform.x.com/widgets.js\";fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");</script>"
     echo "</p>"
 }
 
@@ -912,6 +913,7 @@ make_rss() {
         echo '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">' 
         echo "<channel><title>$global_title</title><link>$global_url/$index_file</link>"
         echo "<description>$global_description</description><language>en</language>"
+        echo "<managingEditor>${global_email}</managingEditor>"
         echo "<lastBuildDate>$pubdate</lastBuildDate>"
         echo "<pubDate>$pubdate</pubDate>"
         echo "<atom:link href=\"$global_url/$blog_feed\" rel=\"self\" type=\"application/rss+xml\" />"
@@ -950,25 +952,23 @@ create_includes() {
 
     if [[ -f $header_file ]]; then cp "$header_file" .header.html
     else {
-        echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'
-        echo '<html xmlns="http://www.w3.org/1999/xhtml"><head>'
-        echo '<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />'
-        echo '<meta name="viewport" content="width=device-width, initial-scale=1.0" />'
-        printf '<link rel="stylesheet" href="%s" type="text/css" />\n' "${css_include[@]}"
+        echo '<!DOCTYPE html>'
+        echo "<html lang=\"${global_language}\">"
+        echo '<meta charset="utf-8">'
+        echo '<meta name="viewport" content="width=device-width, initial-scale=1.0">'
+        printf '<link rel="stylesheet" href="%s" type="text/css">\n' "${css_include[@]}"
         if [[ -z $global_feedburner ]]; then
-            echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"$template_subscribe_browser_button\" href=\"$blog_feed\" />"
+            echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"$template_subscribe_browser_button\" href=\"$blog_feed\">"
         else 
-            echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"$template_subscribe_browser_button\" href=\"$global_feedburner\" />"
+            echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"$template_subscribe_browser_button\" href=\"$global_feedburner\">"
         fi
         } > ".header.html"
     fi
 
     if [[ -f $footer_file ]]; then cp "$footer_file" .footer.html
     else {
-        protected_mail=${global_email//@/&#64;}
-        protected_mail=${protected_mail//./&#46;}
-        echo "<div id=\"footer\">$global_license <a href=\"$global_author_url\">$global_author</a> &mdash; <a href=\"mailto:$protected_mail\">$protected_mail</a><br/>"
-        echo 'Generated with <a href="https://github.com/cfenollosa/bashblog">bashblog</a>, a single bash script to easily create blogs like this one</div>'
+        echo "<div id=\"footer\">$global_license <a href=\"$global_author_url\">$global_author</a> &mdash; <a href=\"mailto:$global_email\">$global_email</a><br/>"
+        echo 'Generated with <a href="https://github.com/maroph/bashblog/tree/maroph">bashblog</a>, a single bash script to easily create blogs like this one</div>'
         } >> ".footer.html"
     fi
 }
@@ -1087,6 +1087,17 @@ reset() {
     read -r line
     if [[ $line == "Yes, I am!" ]]; then
         rm .*.html ./*.html ./*.css ./*.rss &> /dev/null
+#
+        # maroph: remove also the related Markdown source files
+        for m in *.md
+        do
+            if [ "$m" == "README.md" ]
+            then
+                continue
+            fi
+            rm $m
+        done
+#
         echo
         echo "Deleted all posts, stylesheets and feeds."
         echo "Kept your old '.backup.tar.gz' just in case, please delete it manually if needed."

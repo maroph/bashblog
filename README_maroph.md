@@ -11,5 +11,5 @@ Bash Script.
 * substitute twitter.com by x.com
 * Change DOCTYPE from XHTML to HTML5.
 * reset: remove also the related Markdown files
-* add new variable: global_language (used in <html lang=...>)
+* add new variable: global_language (used in \<html lang=...\>)
 

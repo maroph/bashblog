@@ -1,10 +1,18 @@
 # README for branch maroph
-My script _bb.sh_ is based on 
-[bb.sh 2.10](https://github.com/cfenollosa/bashblog/blob/master/bb.sh)
-Bash Script.
+I have forked the
+[bashblog](https://github.com/cfenollosa/bashblog)
+GitHub repository. All my changes are done in the branch
+[maroph](https://github.com/maroph/bashblog/tree/maroph)
+
+My script 
+[bb.sh](https://github.com/maroph/bashblog/blob/maroph/bb.sh)
+is based on the
+[bb.sh version 2.10](https://github.com/cfenollosa/bashblog/blob/master/bb.sh)
+Bash Script. This version is saved in my fork under the tag 
+[v2.10](https://github.com/maroph/bashblog/blob/v2.10/bb.sh)
 
 ## Changes
-I habe done the following changes to the original _bb.sh_ script:
+I have done the following changes to the original _bb.sh_ script:
 
 * Remove protected_mail variable.  
   Use instead global_email in the footer.
@@ -14,3 +22,4 @@ I habe done the following changes to the original _bb.sh_ script:
 * Change DOCTYPE from XHTML to HTML5.
 * reset: remove also the related Markdown files
 * subsitute http://... references by https://... references
+

@@ -24,13 +24,12 @@ global_variables() {
     # The typical subtitle for each blog
     global_description="A blog about turtles and carrots"
     # The public base URL for this blog
-    global_url="http://example.com/blog"
-    global_language="en"
+    global_url="https://example.com/blog"
 
     # Your name
     global_author="John Smith"
     # You can use X (twitter) or facebook or anything for global_author_url
-    global_author_url="http://x.com/example" 
+    global_author_url="https://example.com/"
     # Your email
     global_email="john@smith.com"
 
@@ -234,8 +233,8 @@ disqus_body() {
             (document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(dsq);
             })();
             </script>
-            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>'
+            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+            <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>'
 }
 
 # Prints the required code for disqus in the footer
@@ -375,7 +374,7 @@ twitter() {
 
             search_engine="https://x.com/search?q="
 
-            echo "<p id='twitter'><a href='http://x.com/intent/tweet?url=$1&text=$template_twitter_comment&via=$global_twitter_username'>$template_comments $template_twitter_button</a> "
+            echo "<p id='twitter'><a href='https://x.com/intent/tweet?url=$1&text=$template_twitter_comment&via=$global_twitter_username'>$template_comments $template_twitter_button</a> "
             echo "<a href='$search_engine""$1'><span id='count-$id'></span></a>&nbsp;</p>"
             return;
         else 
@@ -953,7 +952,7 @@ create_includes() {
     if [[ -f $header_file ]]; then cp "$header_file" .header.html
     else {
         echo '<!DOCTYPE html>'
-        echo "<html lang=\"${global_language}\">"
+        echo '<html>'
         echo '<meta charset="utf-8">'
         echo '<meta name="viewport" content="width=device-width, initial-scale=1.0">'
         printf '<link rel="stylesheet" href="%s" type="text/css">\n' "${css_include[@]}"

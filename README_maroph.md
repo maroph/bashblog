@@ -1,8 +1,10 @@
 # README for branch maroph
-Base version: the [bashblog 2.10](https://github.com/cfenollosa/bashblog)
+My script _bb.sh_ is based on 
+[bb.sh 2.10](https://github.com/cfenollosa/bashblog/blob/master/bb.sh)
 Bash Script.
 
 ## Changes
+I habe done the following changes to the original _bb.sh_ script:
 
 * Remove protected_mail variable.  
   Use instead global_email in the footer.
@@ -11,5 +13,4 @@ Bash Script.
 * substitute twitter.com by x.com
 * Change DOCTYPE from XHTML to HTML5.
 * reset: remove also the related Markdown files
-* add new variable: global_language (used in \<html lang=...\>)
-
+* subsitute http://... references by https://... references

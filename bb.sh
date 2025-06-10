@@ -17,7 +17,7 @@ global_config=".config"
 # by the 'global_config' file contents
 global_variables() {
     global_software_name="BashBlog"
-    global_software_version="2.10-maroph"
+    global_software_version="2.10-maroph-1"
 
     # Blog title
     global_title="My fancy blog"
@@ -28,38 +28,18 @@ global_variables() {
 
     # Your name
     global_author="John Smith"
-    # You can use X (twitter) or facebook or anything for global_author_url
+    # You can use any URL for global_author_url
     global_author_url="https://example.com/"
     # Your email
     global_email="john@smith.com"
 
     # CC by-nc-nd is a good starting point, you can change this to "&copy;" for Copyright
-    global_license="CC by-nc-nd"
-
-    # If you have a Google Analytics ID (UA-XXXXX) and wish to use the standard
-    # embedding code, put it on global_analytics
-    # If you have custom analytics code (i.e. non-google) or want to use the Universal
-    # code, leave global_analytics empty and specify a global_analytics_file
-    global_analytics=""
-    global_analytics_file=""
+    global_license="CC BY-NC-ND 4.0"
+    global_license_url="https://creativecommons.org/licenses/by-nc-nd/4.0/"
 
     # Leave this empty (i.e. "") if you don't want to use feedburner, 
     # or change it to your own URL
     global_feedburner=""
-
-    # Change this to your username if you want to use twitter for comments
-    global_twitter_username=""
-    # Default image for the Twitter cards. Use an absolute URL
-    global_twitter_card_image=""
-    # Set this to false for a Twitter button with share count. The cookieless version
-    # is just a link.
-    global_twitter_cookieless="true"
-    # Default search page, where tweets more than a week old are hidden
-    global_twitter_search="twitter"
-
-    # Change this to your disqus username to use disqus for comments
-    global_disqus_username=""
-
 
     # Blog generated files
     # index page of blog (it is usually good to use "index.html" here)
@@ -108,9 +88,6 @@ global_variables() {
     # HTML files to exclude from index, f.ex. post_exclude=('imprint.html 'aboutme.html')
     html_exclude=()
 
-    # Localization and i18n
-    # "Comments?" (used in twitter link after every post)
-    template_comments="Comments?"
     # "Read more..." (link under cut article on index page)
     template_read_more="Read more..."
     # "View more posts" (used on bottom of index page as link to archive)
@@ -133,9 +110,6 @@ global_variables() {
     template_subscribe="Subscribe"
     # "Subscribe to this page..." (used as text for browser feed button that is embedded to html)
     template_subscribe_browser_button="Subscribe to this page..."
-    # "Tweet" (used as twitter text button for posting to twitter)
-    template_twitter_button="Tweet"
-    template_twitter_comment="&lt;Type your comment here but please leave the URL so that other people can follow the comments&gt;"
     
     # The locale to use for the dates displayed on screen
     date_format="%B %d, %Y"
@@ -193,66 +167,6 @@ markdown() {
     echo "$out"
 }
 
-
-# Prints the required google analytics code
-google_analytics() {
-    [[ -z $global_analytics && -z $global_analytics_file ]]  && return
-
-    if [[ -z $global_analytics_file ]]; then
-        echo "<script type=\"text/javascript\">
-
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', '${global_analytics}']);
-        _gaq.push(['_trackPageview']);
-
-        (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-
-        </script>"
-    else
-        cat "$global_analytics_file"
-    fi
-}
-
-# Prints the required code for disqus comments
-disqus_body() {
-    [[ -z $global_disqus_username ]] && return
-
-    echo '<div id="disqus_thread"></div>
-            <script type="text/javascript">
-            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-               var disqus_shortname = '"'$global_disqus_username'"'; // required: replace example with your forum shortname
-
-            /* * * DONT EDIT BELOW THIS LINE * * */
-            (function() {
-            var dsq = document.createElement("script"); dsq.type = "text/javascript"; dsq.async = true;
-            dsq.src = "//" + disqus_shortname + ".disqus.com/embed.js";
-            (document.getElementsByTagName("head")[0] || document.getElementsByTagName("body")[0]).appendChild(dsq);
-            })();
-            </script>
-            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-            <a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>'
-}
-
-# Prints the required code for disqus in the footer
-disqus_footer() {
-    [[ -z $global_disqus_username ]] && return
-    echo '<script type="text/javascript">
-        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-        var disqus_shortname = '"'$global_disqus_username'"'; // required: replace example with your forum shortname
-
-        /* * * DONT EDIT BELOW THIS LINE * * */
-        (function () {
-        var s = document.createElement("script"); s.async = true;
-        s.type = "text/javascript";
-        s.src = "//" + disqus_shortname + ".disqus.com/count.js";
-        (document.getElementsByTagName("HEAD")[0] || document.getElementsByTagName("BODY")[0]).appendChild(s);
-    }());
-    </script>'
-}
 
 # Reads HTML file from stdin, prints its content to stdout
 # $1    where to start ("text" or "entry")
@@ -335,61 +249,6 @@ edit() {
     fi
 }
 
-# Create a Twitter summary (twitter "card") for the post
-#
-# $1 the post file
-# $2 the title
-twitter_card() {
-    [[ -z $global_twitter_username ]] && return
-    
-    echo "<meta name='twitter:card' content='summary' />"
-    echo "<meta name='twitter:site' content='@$global_twitter_username' />"
-    echo "<meta name='twitter:title' content='$2' />" # Twitter truncates at 70 char
-    description=$(grep -v "^<p>$template_tags_line_header" "$1" | sed -e 's/<[^>]*>//g' | tr '\n' ' ' | sed "s/\"/'/g" | head -c 250) 
-    echo "<meta name='twitter:description' content=\"$description\" />"
-
-    # For the image we try to locate the first image in the article
-    image=$(sed -n '2,$ d; s/.*<img.*src="\([^"]*\)".*/\1/p' "$1") 
-
-    # If none, then we try a global setting image
-    [[ -z $image ]] && [[ -n $global_twitter_card_image ]] && image=$global_twitter_card_image
-
-    # If none, return
-    [[ -z $image ]] && return
-
-    # Final housekeeping
-    [[ $image =~ ^https?:// ]] || image=$global_url/$image # Check that URL is absolute
-    echo "<meta name='twitter:image' content='$image' />"
-}
-
-# Adds the code needed by the twitter button
-#
-# $1 the post URL
-twitter() {
-    [[ -z $global_twitter_username ]] && return
-
-    if [[ -z $global_disqus_username ]]; then
-        if [[ $global_twitter_cookieless == true ]]; then 
-            id=$RANDOM
-
-            search_engine="https://x.com/search?q="
-
-            echo "<p id='twitter'><a href='https://x.com/intent/tweet?url=$1&text=$template_twitter_comment&via=$global_twitter_username'>$template_comments $template_twitter_button</a> "
-            echo "<a href='$search_engine""$1'><span id='count-$id'></span></a>&nbsp;</p>"
-            return;
-        else 
-            echo "<p id='twitter'>$template_comments&nbsp;"; 
-        fi
-    else
-        echo "<p id='twitter'><a href=\"$1#disqus_thread\">$template_comments</a> &nbsp;"
-    fi  
-
-    echo "<a href=\"https://x.com/share\" class=\"twitter-share-button\" data-text=\"$template_twitter_comment\" data-url=\"$1\""
-    echo " data-via=\"$global_twitter_username\""
-    echo ">$template_twitter_button</a>	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=\"//platform.x.com/widgets.js\";fjs.parentNode.insertBefore(js,fjs);}}(document,\"script\",\"twitter-wjs\");</script>"
-    echo "</p>"
-}
-
 # Check if the file is a 'boilerplate' (i.e. not a post)
 # The return values are designed to be used like this inside a loop:
 # is_boilerplate_file <file> && continue
@@ -406,7 +265,7 @@ is_boilerplate_file() {
     done
 
     case $name in
-    ( "$index_file" | "$archive_index" | "$tags_index" | "$footer_file" | "$header_file" | "$global_analytics_file" | "$prefix_tags"* )
+    ( "$index_file" | "$archive_index" | "$tags_index" | "$footer_file" | "$header_file" | "$prefix_tags"* )
         return 0 ;;
     ( * ) # Check for excluded
         for excl in "${html_exclude[@]}"; do
@@ -441,8 +300,6 @@ create_html_page() {
     {
         cat ".header.html"
         echo "<title>$title</title>"
-        google_analytics
-        twitter_card "$content" "$title"
         echo "</head><body>"
         # stuff to add before the actual body content
         [[ -n $body_begin_file ]] && cat "$body_begin_file"
@@ -485,21 +342,15 @@ create_html_page() {
         if [[ $index == no ]]; then
             echo -e '\n<!-- text end -->'
 
-            twitter "$global_url/$file_url"
-
             echo '<!-- entry end -->' # absolute end of the post
         fi
 
         echo '</div>' # content
 
-        # Add disqus commments except for index and all_posts pages
-        [[ $index == no ]] && disqus_body
-
         # page footer
         cat .footer.html
         # close divs
         echo '</div></div>' # divbody and divbodyholder 
-        disqus_footer
         [[ -n $body_end_file ]] && cat "$body_end_file"
         echo '</body></html>'
     } > "$filename"
@@ -966,7 +817,12 @@ create_includes() {
 
     if [[ -f $footer_file ]]; then cp "$footer_file" .footer.html
     else {
-        echo "<div id=\"footer\">$global_license <a href=\"$global_author_url\">$global_author</a> &mdash; <a href=\"mailto:$global_email\">$global_email</a><br/>"
+        if [ "${global_license}" == "" ]
+        then
+            echo "<div id=\"footer\">$global_license <a href=\"$global_author_url\">$global_author</a> &mdash; <a href=\"mailto:$global_email\">$global_email</a><br/>"
+        else
+            echo "<div id=\"footer\"><a href=\"${global_license_url}\">${global_license}</a> <a href=\"$global_author_url\">$global_author</a> &mdash; <a href=\"mailto:$global_email\">$global_email</a><br/>"
+        fi
         echo 'Generated with <a href="https://github.com/maroph/bashblog/tree/maroph">bashblog</a>, a single bash script to easily create blogs like this one</div>'
         } >> ".footer.html"
     fi
@@ -995,8 +851,7 @@ create_css() {
         #description{font-size:large;margin-bottom:12px;}
         h3{margin-top:42px;margin-bottom:8px;}
         h4{margin-left:24px;margin-right:24px;}
-        img{max-width:100%;}
-        #twitter{line-height:20px;vertical-align:top;text-align:right;font-style:italic;color:#333;margin-top:24px;font-size:14px;}' > blog.css
+        img{max-width:100%;}' > blog.css
     fi
 
     # If there is a style.css from the parent page (i.e. some landing page)

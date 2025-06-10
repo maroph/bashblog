@@ -1,0 +1,7 @@
+* text=auto
+#
+bb.sh   text eol=lf
+LICENSE text
+#
+*.md text
+

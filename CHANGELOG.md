@@ -1,9 +1,8 @@
 # CHANGELOG
 
-## [Unreleased]
-TODO
+## [Unreleased] - YYYY-MM-DD
 
-## [2.10-maroph-1] - 2025-06-10
+## [2.10-maroph-1] - 2025-06-12
 
 * Remove disqus support.
 * Remove Google Analytics support.

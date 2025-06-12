@@ -823,7 +823,7 @@ create_includes() {
         else
             echo "<div id=\"footer\"><a href=\"${global_license_url}\">${global_license}</a> <a href=\"$global_author_url\">$global_author</a> &mdash; <a href=\"mailto:$global_email\">$global_email</a><br/>"
         fi
-        echo 'Generated with <a href="https://github.com/maroph/bashblog/tree/maroph">bashblog</a>, a single bash script to easily create blogs like this one</div>'
+        echo 'Generated with <a href="https://github.com/maroph/bashblog/tree/v2.10-maroph-1">bashblog</a>, a single bash script to easily create blogs like this one</div>'
         } >> ".footer.html"
     fi
 }
